@@ -27,6 +27,8 @@ def main() -> None:
         for smiles in Path("di_aldehydes.txt").read_text().splitlines()
         if not smiles.isspace()
     ]
+    cages = Path("cages")
+    cages.mkdir(exist_ok=True, parents=True)
     for amine, aldehyde, topology in product(amines, aldehydes, topologies):
         match topology:
             case Topology.FOUR_PLUS_SIX:
@@ -38,7 +40,7 @@ def main() -> None:
             case _ as never:
                 assert_never(never)
         cage = stk.ConstructedMolecule(graph)
-        cage.write(f"{smiles(amine)}_{smiles(aldehyde)}_{topology}.mol")
+        cage.write(cages / f"{smiles(amine)}_{smiles(aldehyde)}_{topology.name}.mol")
 
 
 def smiles(molecule: stk.Molecule) -> str:
