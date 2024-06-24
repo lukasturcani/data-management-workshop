@@ -19,7 +19,7 @@ def main() -> None:
     ]
     amines = [
         stk.BuildingBlock(smiles, stk.PrimaryAminoFactory())
-        for smiles in Path("di_amines.txt").read_text().splitlines()
+        for smiles in Path("tri_amines.txt").read_text().splitlines()
         if not smiles.isspace()
     ]
     aldehydes = [
