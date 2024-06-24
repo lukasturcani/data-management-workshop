@@ -12,11 +12,6 @@ class Topology(Enum):
 
 
 def main() -> None:
-    topologies = [
-        Topology.FOUR_PLUS_SIX,
-        Topology.EIGHT_PLUS_TWELVE,
-        Topology.TWENTY_PLUS_THIRTY,
-    ]
     amines = [
         stk.BuildingBlock(smiles, stk.PrimaryAminoFactory())
         for smiles in Path("tri_amines.txt").read_text().splitlines()
@@ -29,7 +24,7 @@ def main() -> None:
     ]
     cages = Path("cages")
     cages.mkdir(exist_ok=True, parents=True)
-    for amine, aldehyde, topology in product(amines, aldehydes, topologies):
+    for amine, aldehyde, topology in product(amines, aldehydes, Topology):
         match topology:
             case Topology.FOUR_PLUS_SIX:
                 graph = stk.cage.FourPlusSix([amine, aldehyde])
