@@ -1,9 +1,9 @@
-import sqlite3
 from pathlib import Path
-import argparse
-from dataclasses import dataclass
-import csv
 from collections.abc import Iterator, Iterable
+import sqlite3
+import argparse
+import csv
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
@@ -15,34 +15,6 @@ class Peak:
 def main() -> None:
     args = parse_args()
     connection = sqlite3.connect(args.database)
-    connection.execute("""
-        CREATE TABLE IF NOT EXISTS cages (
-            cage_id INTEGER PRIMARY KEY,
-            amine TEXT,
-            aldehyde TEXT,
-            topology TEXT CHECK (topology IN ('FOUR_PLUS_SIX', 'EIGHT_PLUS_TWELVE', 'TWENTY_PLUS_THIRTY')),
-            UNIQUE(amine, aldehyde, topology)
-        )
-    """)
-    connection.execute("""
-        CREATE TABLE IF NOT EXISTS aldehyde_peaks (
-            peak_id INTEGER PRIMARY KEY,
-            cage_id INTEGER,
-            ppm REAL,
-            intensity REAL,
-            FOREIGN KEY (cage_id) REFERENCES cages(id)
-        )
-    """)
-    connection.execute("""
-        CREATE TABLE IF NOT EXISTS imine_peaks (
-            peak_id INTEGER PRIMARY KEY,
-            cage_id INTEGER,
-            ppm REAL,
-            intensity REAL,
-            FOREIGN KEY (cage_id) REFERENCES cages(id)
-        )
-    """)
-
     with open(args.csv) as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
@@ -55,9 +27,9 @@ def main() -> None:
             if not row["aldehyde_amplitudes"]:
                 row["aldehyde_amplitudes"] = "[]"
             cage_id = connection.execute(
-                "INSERT INTO cages(amine, aldehyde, topology) VALUES (?,?,?)",
+                "SELECT cage_id FROM cages WHERE amine=? AND aldehyde=? AND topology=?",
                 (row["amine"], row["aldehyde"], row["topology"]),
-            ).lastrowid
+            ).fetchone()[0]
             for peak in get_peaks(
                 eval(row["imine_peaks"]), eval(row["imine_amplitudes"])
             ):
