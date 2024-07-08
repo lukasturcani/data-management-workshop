@@ -21,7 +21,7 @@ def main() -> None:
             cage_id INTEGER,
             ppm REAL,
             intensity REAL,
-            FOREIGN KEY (cage_id) REFERENCES cages(id)
+            FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
     """)
     connection.execute("""
@@ -30,7 +30,7 @@ def main() -> None:
             cage_id INTEGER,
             ppm REAL,
             intensity REAL,
-            FOREIGN KEY (cage_id) REFERENCES cages(id)
+            FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
     """)
     connection.execute("""
@@ -39,7 +39,7 @@ def main() -> None:
             cage_id INTEGER,
             size REAL,
             UNIQUE(cage_id),
-            FOREIGN KEY (cage_id) REFERENCES cages(id)
+            FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
     """)
     connection.commit()
