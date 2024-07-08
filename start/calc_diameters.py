@@ -6,9 +6,9 @@ import stk
 
 def main() -> None:
     args = parse_args()
-    args.output.mkdir(exist_ok=True, parent=True)
+    args.output.mkdir(exist_ok=True, parents=True)
     for cage in args.cage:
-        output = args.output / cage.with_suffix(".csv").name
+        output = args.output / cage.with_suffix(".json").name
         molecule = stk.BuildingBlock.init_from_file(cage)
         with open(output, "w") as f:
             json.dump({"diameter": molecule.get_maximum_diameter()}, f)
