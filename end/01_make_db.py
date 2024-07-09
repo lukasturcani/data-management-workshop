@@ -9,35 +9,35 @@ def main() -> None:
     connection.execute("""
         CREATE TABLE IF NOT EXISTS cages (
             cage_id INTEGER PRIMARY KEY,
-            amine TEXT,
-            aldehyde TEXT,
-            topology TEXT CHECK (topology IN ('FOUR_PLUS_SIX', 'EIGHT_PLUS_TWELVE', 'TWENTY_PLUS_THIRTY')),
+            amine TEXT NOT NULL,
+            aldehyde TEXT NOT NULL,
+            topology TEXT NOT NULL CHECK (topology IN ('FOUR_PLUS_SIX', 'EIGHT_PLUS_TWELVE', 'TWENTY_PLUS_THIRTY')),
             UNIQUE(amine, aldehyde, topology)
         )
     """)
     connection.execute("""
         CREATE TABLE IF NOT EXISTS aldehyde_peaks (
             peak_id INTEGER PRIMARY KEY,
-            cage_id INTEGER,
-            ppm REAL,
-            intensity REAL,
+            cage_id INTEGER NOT NULL,
+            ppm REAL NOT NULL,
+            intensity REAL NOT NULL,
             FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
     """)
     connection.execute("""
         CREATE TABLE IF NOT EXISTS imine_peaks (
             peak_id INTEGER PRIMARY KEY,
-            cage_id INTEGER,
-            ppm REAL,
-            intensity REAL,
+            cage_id INTEGER NOT NULL,
+            ppm REAL NOT NULL,
+            intensity REAL NOT NULL,
             FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
     """)
     connection.execute("""
         CREATE TABLE IF NOT EXISTS cavity_sizes (
             cavity_id INTEGER PRIMARY KEY,
-            cage_id INTEGER,
-            size REAL,
+            cage_id INTEGER NOT NULL,
+            size REAL NOT NULL,
             UNIQUE(cage_id),
             FOREIGN KEY (cage_id) REFERENCES cages(cage_id)
         )
