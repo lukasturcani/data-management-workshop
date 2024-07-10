@@ -10,12 +10,14 @@ def main() -> None:
     db = atomlite.Database(args.database)
     connection = sqlite3.connect(args.database)
     for entry in db.get_entries():
-        molecule = stk.BuildingBlock.init_from_rdkit_mol(entry.to_rdkit())
+        molecule = stk.BuildingBlock.init_from_rdkit_mol(
+            atomlite.json_to_rdkit(entry.molecule)
+        )
         connection.execute(
             "INSERT INTO cavity_sizes(cage_id, size) VALUES (?,?)",
             (
-                molecule.get_maximum_diameter(),
                 entry.properties["cage_id"],
+                molecule.get_maximum_diameter(),
             ),
         )
 
