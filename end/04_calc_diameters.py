@@ -16,7 +16,7 @@ def main() -> None:
         connection.execute(
             "INSERT INTO cavity_sizes(cage_id, size) VALUES (?,?)",
             (
-                entry.properties["cage_id"],
+                int(entry.key),
                 molecule.get_maximum_diameter(),
             ),
         )

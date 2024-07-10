@@ -58,11 +58,8 @@ def main() -> None:
         )
         db.add_entries(
             atomlite.Entry.from_rdkit(
-                key=f"{smiles(amine)}_{smiles(aldehyde)}_{topology.name}",
+                key=str(cursor.lastrowid),
                 molecule=cage.to_rdkit_mol(),
-                properties={
-                    "cage_id": cursor.lastrowid,
-                },
             ),
             commit=False,
         )
