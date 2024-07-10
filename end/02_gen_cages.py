@@ -38,6 +38,7 @@ def main() -> None:
         stk.BuildingBlock(smiles, stk.AldehydeFactory()) for smiles in ALDEHYDES
     ]
     for amine, aldehyde, topology in product(amines, aldehydes, Topology):
+        graph: stk.TopologyGraph
         match topology:
             case Topology.FOUR_PLUS_SIX:
                 graph = stk.cage.FourPlusSix([amine, aldehyde])
@@ -48,19 +49,22 @@ def main() -> None:
             case _ as never:
                 assert_never(never)
         cage = stk.ConstructedMolecule(graph)
-        db.add_entries(
-            atomlite.Entry.from_rdkit(
-                key=f"{smiles(amine)}_{smiles(aldehyde)}_{topology.name}",
-                molecule=cage.to_rdkit_mol(),
-            ),
-            commit=False,
-        )
-        db.connection.execute(
+        cursor = db.connection.execute(
             """
             INSERT INTO cages(amine, aldehyde, topology)
             VALUES (?,?,?)
             """,
             (smiles(amine), smiles(aldehyde), topology.name),
+        )
+        db.add_entries(
+            atomlite.Entry.from_rdkit(
+                key=f"{smiles(amine)}_{smiles(aldehyde)}_{topology.name}",
+                molecule=cage.to_rdkit_mol(),
+                properties={
+                    "cage_id": cursor.lastrowid,
+                },
+            ),
+            commit=False,
         )
     db.connection.commit()
 
