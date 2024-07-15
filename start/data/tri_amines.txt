@@ -1,0 +1,5 @@
+Nc1nc(N)nc(N)n1
+Cc1c(CN)c(C)c(CN)c(C)c1CN
+NCCN(CCN)CCN
+CCc1c(CN)c(CC)c(CN)c(CC)c1CN
+NCCCN(CCCN)CCCN

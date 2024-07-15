@@ -1,0 +1,5 @@
+O=Cc1cccc(C=O)c1
+CC(C)(C)c1cc(C=O)c(O)c(C=O)c1
+O=Cc1cc2sc(C=O)cc2s1
+O=Cc1ccc(C=O)cc1
+O=Cc1c(F)c(F)c(C=O)c(F)c1F
