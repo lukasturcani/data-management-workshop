@@ -217,7 +217,7 @@ If the data is invalid we have to edit it: `row["imine_peaks"] = "[]"`.
 Our column holds data a string. We want to access the numbers in the string.
 This means we have to run eval on the string. This is bad for storage because
 each digit is encoded using a separate byte. A float may easily be 12 digits
-long and take up 12 digits as a result but would only be 4 bytes if encoded
+long and take up 12 bytes as a result but would only be 4 bytes if encoded
 directly a float.
 
 Eval is also unsafe as it can execute arbitrary code. Lots of code quality
