@@ -728,6 +728,81 @@ shape: (51, 8)
 
 # AtomLite: Storing molecular structures
 
+```python
+import atomlite
+import rdkit.Chem as rdkit
+
+db = atomlite.Database("molecules.db")
+
+entry1 = atomlite.Entry.from_rdkit("first", rdkit.MolFromSmiles("C"))
+entry2 = atomlite.Entry.from_rdkit("second", rdkit.MolFromSmiles("CN"))
+
+db.add_entries([entry1, entry2])
+
+for entry in db.get_entries(["first", "second"]):
+    molecule = atomlite.json_to_rdkit(entry.molecule)
+    print(entry.properties)
+```
+
+## Adding molecular properties
+
+```python
+entry = atomlite.Entry.from_rdkit(
+    key="first",
+    molecule=rdkit.MolFromSmiles("C"),
+    properties={"is_interesting": False},
+)
+db.add_entries(entry)
+
+for entry in db.get_entries():
+    print(entry.properties)
+```
+
+```
+{'is_interesting': False}
+```
+
+---
+
+# AtomLite: Storing molecular structures
+
+## Using data frames
+
+```python
+db.add_entries(
+    [
+        atomlite.Entry.from_rdkit(
+            key="first",
+            molecule=rdkit.MolFromSmiles("C"),
+            properties={"num_atoms": 1, "is_interesting": False},
+        ),
+        atomlite.Entry.from_rdkit(
+            key="second",
+            molecule=rdkit.MolFromSmiles("CN"),
+            properties={"num_atoms": 2, "is_interesting": True},
+        ),
+    ]
+)
+print(db.get_property_df(["$.num_atoms", "$.is_interesting"]))
+```
+
+
+```
+shape: (2, 3)
+┌────────┬─────────────┬──────────────────┐
+│ key    ┆ $.num_atoms ┆ $.is_interesting │
+│ ---    ┆ ---         ┆ ---              │
+│ str    ┆ i64         ┆ bool             │
+╞════════╪═════════════╪══════════════════╡
+│ first  ┆ 1           ┆ false            │
+│ second ┆ 2           ┆ true             │
+└────────┴─────────────┴──────────────────┘
+```
+
+---
+
+# AtomLite: Storing molecular structures
+
 You can store molecules in a SQLite database with `atomlite`.
 
 ```python
